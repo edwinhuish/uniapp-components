@@ -53,7 +53,7 @@ jobs:
         run: npm ci
         working-directory: ./src/components
       - name: 发布到 NPM
-        run: npm publish || true
+        run: npm publish --access public || true
         working-directory: ./src/components
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
