@@ -20,8 +20,5 @@
   "bugs": {
     "url": "https://github.com/edwinhuish/uniapp-components/issues"
   },
-  "homepage": "https://github.com/edwinhuish/uniapp-components#readme",
-  "devDependencies": {
-    "require-module": "^0.1.0"
-  }
+  "homepage": "https://github.com/edwinhuish/uniapp-components#readme"
 }
