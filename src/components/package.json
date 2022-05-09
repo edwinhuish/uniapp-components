@@ -1,5 +1,5 @@
 {
-  "name": "e-uni-components",
+  "name": "@edwinhuish/uni-components",
   "version": "0.1.5",
   "description": "uniapp 组件封装",
   "main": "index.js",
