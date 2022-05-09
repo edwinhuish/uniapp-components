@@ -1,24 +1,41 @@
-name: Public Npm
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: Node.js Package
 
 on:
   push:
-    branches: [ master ]
+    tags:
+    - 'v*'
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
-
-    name: 'publish npm'
-
-    environment: npm
-
     steps:
-      - uses: actions/checkout@master
-
-      - name: 'Publish to the npm registry'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} # 跟前面步骤中的 NPM_AUTH_TOKEN 保持一致
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          default_branch: 'master'
-        run: npm publish ./src/components
+          node-version: 14
+      - run: npm ci
+      # - run: npm test
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        working-directory: ./src/components
+      - uses: actions/setup-node@v2
+        working-directory: ./src/components
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+        working-directory: ./src/components
+      - run: npm publish
+        working-directory: ./src/components
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+# ... 还有一部分用于发布 githua package 的代码
+# ... 因为用不到所以直接将这部分删除了
