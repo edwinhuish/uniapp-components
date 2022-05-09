@@ -1,0 +1,27 @@
+{
+  "name": "e-uni-components",
+  "version": "0.1.0",
+  "description": "uniapp 组件封装",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edwinhuish/uniapp-components.git"
+  },
+  "keywords": [
+    "uniapp组件",
+    "uniapp",
+    "components"
+  ],
+  "author": "Edwin <edwinhuish@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edwinhuish/uniapp-components/issues"
+  },
+  "homepage": "https://github.com/edwinhuish/uniapp-components#readme",
+  "devDependencies": {
+    "require-module": "^0.1.0"
+  }
+}

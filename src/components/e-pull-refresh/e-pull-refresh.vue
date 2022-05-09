@@ -22,16 +22,7 @@
 <script>
 export default {
   name: 'EPullRefresh',
-  model: {
-    prop: 'modelValue',
-    event: 'change',
-  },
   props: {
-    // 是否处于加载中状态
-    modelValue: {
-      type: Boolean,
-      default: false,
-    },
     // 下拉过程提示文案
     pullingText: {
       type: String,
@@ -107,12 +98,7 @@ export default {
     },
   },
   watch: {
-    modelValue(newVal, oldVal) {
-      if (newVal === false && this.status === 2) {
-        this.refreshFinished()
-      }
-    },
-    status(newVal, oldVal) {
+    status(newVal) {
       this.$emit('change', { status: newVal })
     },
   },
@@ -156,8 +142,7 @@ export default {
       // 可刷新
       if (this.status === 1) {
         this.status = 2 // 标记为刷新中
-        this.$emit('update:modelValue', true)
-        this.$emit('refresh')
+        this.$emit('refresh', this.refreshFinished)
       } else {
         this.restorePosition()
       }
@@ -169,6 +154,7 @@ export default {
       this.touching = false
     },
     refreshFinished() {
+      console.log('refresh finished')
       this.status = 3
       this.restorePosition()
     },
