@@ -1,32 +1,51 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
-
-name: Node.js Package
+# name属性用来指定这个工作流的名字
+name: Create release and publish NPM
 
 on:
+  # 当对分支master进行push操作的时候,触发该条工作流
   push:
-    tags:
-    - 'v*'
+    branches: [ master ]
 
 jobs:
-  build:
+  build-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v2 # 先检出代码
+      - name: 初始化node环境
+        uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: npm ci
+
+      - name: 安装依赖
+        run: npm ci
       # - run: npm test
 
+      # 下面主要是创建 github 的release
+      # 使用 tyankatsu0105/read-package-version-actions@v1 工具来读取对应的package.json 数据
+      - name: 读取 package.json
+        uses: tyankatsu0105/read-package-version-actions@v1
+        with:
+          path: './src/components'
+        id: package-version
+
+       # 关于创建 release 的更多参数，可以查看 actions/create-release@v1
+      - name: 创建 Release for Tag
+        id: release_tag
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }} # 这块需要用到 github的token，因为需要对分之进行代码推送
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          release_name: Release v${{ steps.package-version.outputs.version }}
+          prerelease: false # 是否为预发布版本
+
+
   publish-npm:
-    needs: build
+    needs: build-release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        working-directory: ./src/components
       - uses: actions/setup-node@v2
-        working-directory: ./src/components
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
@@ -35,7 +54,4 @@ jobs:
       - run: npm publish
         working-directory: ./src/components
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-# ... 还有一部分用于发布 githua package 的代码
-# ... 因为用不到所以直接将这部分删除了
+          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
