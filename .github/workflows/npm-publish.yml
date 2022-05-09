@@ -33,10 +33,10 @@ jobs:
       #   id: package-version
 
        # 关于创建 release 的更多参数，可以查看 https://github.com/marketplace/actions/auto-generate-next-release-tag
-      - name: 创建 Release 和 Tag
-        uses: amitsingh-007/next-release-tag@v1.0.0
-        with:
-          github_token: ${{ secrets.PERSONAL_TOKEN }}
+      # - name: 创建 Release 和 Tag
+      #   uses: amitsingh-007/next-release-tag@v1.0.0
+      #   with:
+      #     github_token: ${{ secrets.PERSONAL_TOKEN }}
 
 
   publish-npm:
