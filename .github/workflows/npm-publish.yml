@@ -4,9 +4,8 @@ name: Create release and publish NPM
 on:
   # 当对分支master进行push操作的时候,触发该条工作流
   push:
-    branches: [ master ]
-    # tags:
-    #   - 'v*'
+    tags:
+      - 'v*'
 
 jobs:
   build-release:
@@ -34,11 +33,11 @@ jobs:
        # 关于创建 release 的更多参数，可以查看 actions/create-release@v1
       - name: 创建 Release for Tag
         id: release_tag
-        uses: actions/create-release@v1 || true
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }} # 这块需要用到 github的token，因为需要对分之进行代码推送
         with:
-          tag_name: v${{ steps.package-version.outputs.version }}
+          # tag_name: v${{ steps.package-version.outputs.version }}
           release_name: Release v${{ steps.package-version.outputs.version }}
           prerelease: false # 是否为预发布版本
 
@@ -57,7 +56,7 @@ jobs:
         run: npm ci
         working-directory: ./src/components
       - name: 发布到 NPM
-        run: npm publish || true
+        run: npm publish
         working-directory: ./src/components
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

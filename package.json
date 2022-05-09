@@ -1,6 +1,6 @@
 {
   "name": "e-uniapp-components",
-  "version": "0.1.4",
+  "version": "0.1.0",
   "scripts": {
     "serve": "npm run dev:h5",
     "build": "npm run build:h5",
