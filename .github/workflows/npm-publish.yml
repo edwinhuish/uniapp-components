@@ -16,8 +16,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Install and Build
-        run: |
-          npm publish src/components # 这是我的项目的打包命令，你也可以改成你的
+        run: npm publish ./src/components
 
       - name: 'Publish to the npm registry'
         uses: primer/publish@3.0.0
