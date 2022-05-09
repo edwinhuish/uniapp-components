@@ -4,14 +4,16 @@ name: Create release and publish NPM
 on:
   # 当对分支master进行push操作的时候,触发该条工作流
   push:
-    tags:
-      - 'v*'
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build-release:
     runs-on: ubuntu-latest
     environment: github
     steps:
+      # 检查仓库以便作业能正常访问
       - uses: actions/checkout@v2 # 先检出代码
       - name: 初始化node环境
         uses: actions/setup-node@v2
@@ -24,22 +26,17 @@ jobs:
 
       # 下面主要是创建 github 的release
       # 使用 tyankatsu0105/read-package-version-actions@v1 工具来读取对应的package.json 数据
-      - name: 读取 package.json
-        uses: tyankatsu0105/read-package-version-actions@v1
-        with:
-          path: './src/components'
-        id: package-version
+      # - name: 读取 package.json
+      #   uses: tyankatsu0105/read-package-version-actions@v1
+      #   with:
+      #     path: './src/components'
+      #   id: package-version
 
-       # 关于创建 release 的更多参数，可以查看 actions/create-release@v1
-      - name: 创建 Release for Tag
-        id: release_tag
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }} # 这块需要用到 github的token，因为需要对分之进行代码推送
+       # 关于创建 release 的更多参数，可以查看 https://github.com/marketplace/actions/auto-generate-next-release-tag
+      - name: 创建 Release 和 Tag
+        uses: amitsingh-007/next-release-tag@v1.0.0
         with:
-          # tag_name: v${{ steps.package-version.outputs.version }}
-          release_name: Release v${{ steps.package-version.outputs.version }}
-          prerelease: false # 是否为预发布版本
+          github_token: ${{ secrets.PERSONAL_TOKEN }}
 
 
   publish-npm:
@@ -56,7 +53,7 @@ jobs:
         run: npm ci
         working-directory: ./src/components
       - name: 发布到 NPM
-        run: npm publish
+        run: npm publish || true
         working-directory: ./src/components
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
