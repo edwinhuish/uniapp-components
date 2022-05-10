@@ -142,9 +142,9 @@ export default {
       // 可刷新
       if (this.status === 1) {
         this.status = 2 // 标记为刷新中
-        this.$emit('refresh', this.refreshFinished)
+        this.$emit('refresh', this.success)
       } else {
-        this.restorePosition()
+        this.restore()
       }
     },
     touchcancel(e) {
@@ -153,12 +153,12 @@ export default {
       }
       this.touching = false
     },
-    refreshFinished() {
+    success() {
       console.log('refresh finished')
       this.status = 3
-      this.restorePosition()
+      setTimeout(this.restore(), this.successDuration)
     },
-    restorePosition() {
+    restore() {
       this.transition = this.animationDuration
       this.deviation = 0
       this.startY = 0
