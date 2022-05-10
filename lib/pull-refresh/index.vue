@@ -104,7 +104,12 @@ export default {
   },
   methods: {
     touchstart(e) {
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+
       if (this.disabled) {
+        this.touching = false
         return
       }
       this.touching = true
@@ -113,7 +118,11 @@ export default {
       this.startY = this.startY || e.touches[0].pageY // 避免还没有结束再次点击
     },
     touchmove(e) {
+      if (e.cancelable) {
+        e.preventDefault()
+      }
       if (this.disabled) {
+        this.touching = false
         return
       }
       // 如果没有标记触碰中，则直接返回
@@ -134,7 +143,12 @@ export default {
       }
     },
     touchend(e) {
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+
       if (this.disabled) {
+        this.touching = false
         return
       }
       this.touching = false

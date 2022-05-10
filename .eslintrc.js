@@ -16,7 +16,7 @@ module.exports = {
     'vue/setup-compiler-macros': true,
   },
   extends: [
-    'plugin:vue/recommended',
+    'plugin:vue/vue3-recommended',
     'eslint:recommended',
     '@vue/prettier',
     // eslint-config-prettier 的缩写
