@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: 'EPullRefresh',
+  name: 'PullRefresh',
   props: {
     // 下拉过程提示文案
     pullingText: {

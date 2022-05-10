@@ -1,16 +1,16 @@
 <template>
   <view class="content">
-    <EPullRefresh success-text="刷新完成!" @refresh="onRefresh" @change="onChange">
+    <PullRefresh success-text="刷新完成!" @refresh="onRefresh" @change="onChange">
       <div v-for="item in list" :key="item" class="block">item-{{ item }}</div>
-    </EPullRefresh>
+    </PullRefresh>
   </view>
 </template>
 
 <script>
-import { EPullRefresh } from '../../components'
+import { PullRefresh } from '../../components'
 export default {
   components: {
-    EPullRefresh,
+    PullRefresh,
   },
   data() {
     return {
