@@ -1,6 +1,6 @@
 {
   "name": "@edwinhuish/uni-components",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "uniapp 组件封装",
   "main": "index.js",
   "scripts": {

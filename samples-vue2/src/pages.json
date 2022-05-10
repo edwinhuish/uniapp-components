@@ -1,0 +1,25 @@
+{
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/pull-refresh/index",
+      "style": {
+        "navigationBarTitleText": "下拉刷新组件",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/load-more/index",
+      "style": {
+        "navigationBarTitleText": "上拉加载更多组件",
+        "enablePullDownRefresh": false,
+        "onReachBottomDistance": 50
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  }
+}
