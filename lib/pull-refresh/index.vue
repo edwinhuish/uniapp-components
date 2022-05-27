@@ -9,10 +9,7 @@
     <!-- 内容 -->
     <view
       class="content-wrapper"
-      :style="{
-        transform: `translateY( ${deviation}px )`,
-        transition: `${transition}ms`,
-      }"
+      :style="contentWrapperStyle"
     >
       <slot></slot>
     </view>
@@ -20,6 +17,11 @@
 </template>
 
 <script>
+const STATUS_DEFAULT = 0
+const STATUS_READY = 1
+const STATUS_LOADING = 2
+const STATUS_DONE = 3
+
 export default {
   name: 'PullRefresh',
   props: {
@@ -29,7 +31,7 @@ export default {
       default: '下拉即可刷新...',
     },
     // 释放过程提示文案
-    loosingText: {
+    readyText: {
       type: String,
       default: '释放即可刷新...',
     },
@@ -38,13 +40,13 @@ export default {
       type: String,
       default: '加载中...',
     },
-    // 刷新成功提示文案
-    successText: {
+    // 刷新完成提示文案
+    doneText: {
       type: String,
       default: '',
     },
-    // 刷新成功提示展示时长(ms)
-    successDuration: {
+    // 刷新完成提示展示时长(ms)
+    doneDuration: {
       type: Number,
       default: 500,
     },
@@ -84,16 +86,26 @@ export default {
   computed: {
     noticeText() {
       switch (this.status) {
-        case 0:
+        case STATUS_DEFAULT:
           return this.pullingText
-        case 1:
-          return this.loosingText
-        case 2:
+        case STATUS_READY:
+          return this.readyText
+        case STATUS_LOADING:
           return this.loadingText
-        case 3:
-          return this.successText
+        case STATUS_DONE:
+          return this.doneText
         default:
-          return this.loosingText
+          return this.readyText
+      }
+    },
+    contentWrapperStyle() {
+      if (this.status !== STATUS_DEFAULT) {
+        return {
+          transform: `translateY( ${this.deviation}px )`,
+          transition: `${this.transition}ms`,
+        }
+      } else {
+        return {}
       }
     },
   },
@@ -113,7 +125,7 @@ export default {
         return
       }
       this.touching = true
-      this.status = 0
+      this.status = STATUS_DEFAULT
       this.transition = 0
       this.startY = this.startY || e.touches[0].pageY // 避免还没有结束再次点击
     },
@@ -132,13 +144,13 @@ export default {
 
       const distance = e.touches[0].pageY - this.startY
       if (distance >= this.pullDistance) {
-        this.status = 1
+        this.status = STATUS_READY
         const diff = distance - this.pullDistance
         const dumping = this.outDamping > 1 ? this.outDamping : 1
         const add = diff / dumping
         this.deviation = this.pullDistance + add
       } else {
-        this.status = 0
+        this.status = STATUS_DEFAULT
         this.deviation = distance
       }
     },
@@ -154,9 +166,9 @@ export default {
       this.touching = false
 
       // 可刷新
-      if (this.status === 1) {
-        this.status = 2 // 标记为刷新中
-        this.$emit('refresh', this.success)
+      if (this.status === STATUS_READY) {
+        this.status = STATUS_LOADING // 标记为刷新中
+        this.$emit('refresh', this.done)
       } else {
         this.restore()
       }
@@ -167,15 +179,17 @@ export default {
       }
       this.touching = false
     },
-    success() {
-      console.log('refresh finished')
-      this.status = 3
-      setTimeout(this.restore(), this.successDuration)
+    done() {
+      // console.log('refresh done')
+      this.status = STATUS_DONE
+      setTimeout(this.restore(), this.doneDuration)
     },
     restore() {
       this.transition = this.animationDuration
       this.deviation = 0
       this.startY = 0
+      // 将 status 恢复到初始状态
+      setTimeout(() => (this.status = STATUS_DEFAULT), this.animationDuration)
     },
   },
 }
